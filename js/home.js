@@ -13,24 +13,36 @@ launcher.homepage = function() {
     } catch (e) {
 	console.log(e);
     }
-    this.addButtonListener();
+    this.addButtonListeners();
 };
 goog.addSingletonGetter(launcher.homepage);
 
-launcher.homepage.prototype.addButtonListener = function() {
+launcher.homepage.prototype.addButtonListeners = function() {
     var button = goog.dom.getElementByClass('button');
     goog.events.listen(button, goog.events.EventType.CLICK,
 			     this.buttonHandler, undefined, this);
+    var clear = goog.dom.getElementByClass('clear'); 
+    goog.events.listen(clear, goog.events.EventType.CLICK,
+			     this.clearHandler, undefined, this);   
+};
+
+launcher.homepage.prototype.getWs = function() {
+    return this.ws;
 };
 
 launcher.homepage.prototype.buttonHandler = function() {
-    this.ws.send("1");
+    this.getWs().send("1");
+};
+
+launcher.homepage.prototype.clearHandler = function() {
+    var output = goog.dom.getElementByClass('output');
+    goog.dom.setTextContent(output, '');
 };
 
 launcher.homepage.prototype.onMessage = function(e) {
     var output = goog.dom.getElementByClass('output');
-    debugger;
-    output.innerHTML += e.getMessage();
+    output.innerHTML += e.message;
+    output.scrollTop = output.scrollHeight;
 };
 
 // function initHome() {

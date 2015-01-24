@@ -3,4 +3,5 @@
     border: 1px solid black;
     height: 500px;
     width: 600px;
+    overflow-y: scroll;
 }

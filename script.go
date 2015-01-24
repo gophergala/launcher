@@ -18,7 +18,7 @@ type Script struct {
 	Script string
 }
 
-func (self *Script) Execute(host Host, out io.Writer) error {
+func (self *Script) Execute(host *Host, out io.Writer) error {
 	cfg := &ssh.ClientConfig{
 		User: host.User,
 		Auth: []ssh.AuthMethod{

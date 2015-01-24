@@ -1,8 +1,7 @@
 package main
 
 import (
-	"code.google.com/p/go.net/websocket"
-	"fmt"
+	"golang.org/x/net/websocket"
 )
 
 type hub struct {
@@ -41,8 +40,7 @@ func (c *connection) reader() {
 		if err != nil {
 			break
 		}
-		fmt.Println(message)
-		// c.send <- message + ": response from web socket"
+		ExecuteScript(c.send)
 	}
 }
 
