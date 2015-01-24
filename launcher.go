@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bmizerany/pat"
 	"github.com/elazarl/go-bindata-assetfs"
+	"code.google.com/p/go.net/websocket"
 	"log"
 	"net/http"
 )
@@ -13,6 +14,7 @@ func main() {
 	mux := pat.New()
 	fs := http.FileServer(&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, Prefix: "static"})
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.Handle("/ws", websocket.Handler(wsHandler))
 
 	http.Handle("/", mux)
 	mux.Get("/", http.HandlerFunc(Home))
