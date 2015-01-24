@@ -35,12 +35,12 @@ type connection struct {
 
 func (c *connection) reader() {
 	for {
-		var message string
-		err := websocket.Message.Receive(c.ws, &message)
+		var name string
+		err := websocket.Message.Receive(c.ws, &name)
 		if err != nil {
 			break
 		}
-		ExecuteScript(c.send)
+		ExecuteScript(name, c.send)
 	}
 }
 

@@ -8,10 +8,18 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"os"
 )
 
+var config *Config
 //go:generate go-bindata -debug templates static
 func main() {
+	var err error
+	config, err = ParseConfig("launcher.toml")
+	if err != nil {
+		fmt.Printf("Error while parsing launcher.toml config: %v\n", err.Error())
+		os.Exit(1)
+	}
 	mux := pat.New()
 	fs := http.FileServer(&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, Prefix: "static"})
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
@@ -37,12 +45,26 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, string(data))
 }
 
-func ExecuteScript(send chan string) {
-	script := &Script{1, "list files", "ls && sleep 1 && ls && sleep 1 && ls && sleep 1 && ls"}
-	host := &Host{"127.0.0.1", "user", "password", "22"}
-	err := script.Execute(host, &ChannelWriter{send})
-	if err != nil {
-		panic(err)
+func ExecuteScript(name string, send chan string) {
+	var script *Script
+	var host *Host
+	for scriptName, configScript := range config.Scripts {
+		if scriptName == name {
+			script = configScript
+		}
+	}
+	if script != nil {
+		for hostName, configHost := range config.Hosts {
+			if hostName == script.Host {
+				host = configHost
+			}
+		}
+	}
+	if script != nil && host != nil {
+		err := script.Execute(host, &ChannelWriter{send})
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
