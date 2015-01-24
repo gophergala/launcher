@@ -3,13 +3,17 @@ package main
 import (
 	"fmt"
 	"github.com/bmizerany/pat"
+	"github.com/elazarl/go-bindata-assetfs"
 	"log"
 	"net/http"
 )
 
-//go:generate go-bindata templates
+//go:generate go-bindata -debug templates static
 func main() {
 	mux := pat.New()
+	fs := http.FileServer(&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, Prefix: "static"})
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	http.Handle("/", mux)
 	mux.Get("/", http.HandlerFunc(Home))
 	log.Println("Listening on port 8080")

@@ -1,33 +1,21 @@
 package main
 
 import (
-	"bytes"
-	"compress/gzip"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
-func bindata_read(data []byte, name string) ([]byte, error) {
-	gz, err := gzip.NewReader(bytes.NewBuffer(data))
+// bindata_read reads the given file from disk. It returns an error on failure.
+func bindata_read(path, name string) ([]byte, error) {
+	buf, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("Read %q: %v", name, err)
+		err = fmt.Errorf("Error reading asset %s at %s: %v", name, path, err)
 	}
-
-	var buf bytes.Buffer
-	_, err = io.Copy(&buf, gz)
-	gz.Close()
-
-	if err != nil {
-		return nil, fmt.Errorf("Read %q: %v", name, err)
-	}
-
-	return buf.Bytes(), nil
+	return buf, err
 }
 
 type asset struct {
@@ -35,50 +23,40 @@ type asset struct {
 	info  os.FileInfo
 }
 
-type bindata_file_info struct {
-	name    string
-	size    int64
-	mode    os.FileMode
-	modTime time.Time
-}
-
-func (fi bindata_file_info) Name() string {
-	return fi.name
-}
-func (fi bindata_file_info) Size() int64 {
-	return fi.size
-}
-func (fi bindata_file_info) Mode() os.FileMode {
-	return fi.mode
-}
-func (fi bindata_file_info) ModTime() time.Time {
-	return fi.modTime
-}
-func (fi bindata_file_info) IsDir() bool {
-	return false
-}
-func (fi bindata_file_info) Sys() interface{} {
-	return nil
-}
-
-var _templates_homepage_html_tmpl = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\xb2\xc9\x28\xc9\xcd\xb1\xe3\x52\x50\xb0\xc9\x48\x4d\x4c\xb1\xe3\xb2\x29\xc9\x2c\xc9\x49\xb5\xb3\xd1\x87\xd0\x5c\x36\xfa\x50\xf1\xa4\xfc\x94\x4a\x20\x95\x61\x68\xe7\x93\x58\x9a\x97\x9c\x91\x5a\x04\x94\x32\xb4\xe3\x02\xaa\x80\x4a\xe9\x43\x8c\x02\x04\x00\x00\xff\xff\x6a\xd8\x7d\x49\x52\x00\x00\x00")
-
-func templates_homepage_html_tmpl_bytes() ([]byte, error) {
-	return bindata_read(
-		_templates_homepage_html_tmpl,
-		"templates/homepage.html.tmpl",
-	)
-}
-
+// templates_homepage_html_tmpl reads file data from disk. It returns an error on failure.
 func templates_homepage_html_tmpl() (*asset, error) {
-	bytes, err := templates_homepage_html_tmpl_bytes()
+	path := "/home/andrey/Programming/go/src/github.com/romanoff/launcher/templates/homepage.html.tmpl"
+	name := "templates/homepage.html.tmpl"
+	bytes, err := bindata_read(path, name)
 	if err != nil {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "templates/homepage.html.tmpl", size: 82, mode: os.FileMode(436), modTime: time.Unix(1422067301, 0)}
-	a := &asset{bytes: bytes, info: info}
-	return a, nil
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// static_all_css reads file data from disk. It returns an error on failure.
+func static_all_css() (*asset, error) {
+	path := "/home/andrey/Programming/go/src/github.com/romanoff/launcher/static/all.css"
+	name := "static/all.css"
+	bytes, err := bindata_read(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
 }
 
 // Asset loads and returns the asset for the given name.
@@ -123,6 +101,7 @@ func AssetNames() []string {
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
 	"templates/homepage.html.tmpl": templates_homepage_html_tmpl,
+	"static/all.css":               static_all_css,
 }
 
 // AssetDir returns the file names below a certain
@@ -166,6 +145,9 @@ type _bintree_t struct {
 }
 
 var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
+	"static": &_bintree_t{nil, map[string]*_bintree_t{
+		"all.css": &_bintree_t{static_all_css, map[string]*_bintree_t{}},
+	}},
 	"templates": &_bintree_t{nil, map[string]*_bintree_t{
 		"homepage.html.tmpl": &_bintree_t{templates_homepage_html_tmpl, map[string]*_bintree_t{}},
 	}},

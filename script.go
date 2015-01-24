@@ -5,7 +5,6 @@ import (
 	"io"
 )
 
-
 type Host struct {
 	Name     string
 	User     string
