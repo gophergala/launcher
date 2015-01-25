@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/bmizerany/pat"
 	"github.com/elazarl/go-bindata-assetfs"
@@ -9,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -16,6 +18,8 @@ var config *Config
 
 //go:generate go-bindata templates static
 func main() {
+	port := flag.Int("port", 8080, "port launcher will be running on")
+	flag.Parse()
 	var err error
 	config, err = ParseConfig("launcher.toml")
 	if err != nil {
@@ -31,8 +35,8 @@ func main() {
 	http.Handle("/", mux)
 	mux.Get("/", http.HandlerFunc(Home))
 	mux.Get("/scripts/:name", http.HandlerFunc(ScriptHandler))
-	log.Println("Listening on port 8080")
-	http.ListenAndServe(":8080", nil)
+	log.Println("Listening on port " + strconv.Itoa(*port))
+	http.ListenAndServe(":"+strconv.Itoa(*port), nil)
 }
 
 func GetAsset(path string) []byte {
@@ -88,6 +92,7 @@ func ExecuteScript(name string, send chan string) {
 		}
 	}
 	if script != nil && host != nil {
+		log.Println("Executing " + name + " script")
 		err := script.Execute(host, &ChannelWriter{send})
 		if err != nil {
 			panic(err)
