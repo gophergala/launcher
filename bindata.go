@@ -41,6 +41,42 @@ func templates_homepage_html_tmpl() (*asset, error) {
 	return a, err
 }
 
+// templates_script_html_tmpl reads file data from disk. It returns an error on failure.
+func templates_script_html_tmpl() (*asset, error) {
+	path := "/home/andrey/Programming/go/src/github.com/romanoff/launcher/templates/script.html.tmpl"
+	name := "templates/script.html.tmpl"
+	bytes, err := bindata_read(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// templates_script_html_tmpl_ reads file data from disk. It returns an error on failure.
+func templates_script_html_tmpl_() (*asset, error) {
+	path := "/home/andrey/Programming/go/src/github.com/romanoff/launcher/templates/script.html.tmpl~"
+	name := "templates/script.html.tmpl~"
+	bytes, err := bindata_read(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
 // static_all_css reads file data from disk. It returns an error on failure.
 func static_all_css() (*asset, error) {
 	path := "/home/andrey/Programming/go/src/github.com/romanoff/launcher/static/all.css"
@@ -119,6 +155,8 @@ func AssetNames() []string {
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
 	"templates/homepage.html.tmpl": templates_homepage_html_tmpl,
+	"templates/script.html.tmpl": templates_script_html_tmpl,
+	"templates/script.html.tmpl~": templates_script_html_tmpl_,
 	"static/all.css": static_all_css,
 	"static/home.js": static_home_js,
 }
@@ -171,6 +209,10 @@ var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
 	}},
 	"templates": &_bintree_t{nil, map[string]*_bintree_t{
 		"homepage.html.tmpl": &_bintree_t{templates_homepage_html_tmpl, map[string]*_bintree_t{
+		}},
+		"script.html.tmpl": &_bintree_t{templates_script_html_tmpl, map[string]*_bintree_t{
+		}},
+		"script.html.tmpl~": &_bintree_t{templates_script_html_tmpl_, map[string]*_bintree_t{
 		}},
 	}},
 }}

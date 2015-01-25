@@ -31,7 +31,7 @@ launcher.homepage.prototype.getWs = function() {
 };
 
 launcher.homepage.prototype.buttonHandler = function() {
-    this.getWs().send("1");
+    this.getWs().send(goog.global['scriptName']);
 };
 
 launcher.homepage.prototype.clearHandler = function() {
