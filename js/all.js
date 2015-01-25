@@ -41,7 +41,7 @@ launcher.scriptpage.prototype.clearHandler = function() {
 
 launcher.scriptpage.prototype.onMessage = function(e) {
     var output = goog.dom.getElementByClass('output');
-    output.innerHTML += e.message;
+    output.innerHTML += ('<pre>' + e.message + '</pre>');
     output.scrollTop = output.scrollHeight;
 };
 launcher.scriptpage.getInstance();
