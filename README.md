@@ -51,3 +51,7 @@ Console output of script is shown on the page. Server sends script output throug
 
 Screenshots
 -----------
+
+![Scripts list](images/scripts_list.png "Script launcher with scripts list")
+
+![Script execution](images/execute_script.png "Script launcher with executed script")
