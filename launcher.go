@@ -5,14 +5,15 @@ import (
 	"github.com/bmizerany/pat"
 	"github.com/elazarl/go-bindata-assetfs"
 	"golang.org/x/net/websocket"
+	"html/template"
 	"log"
 	"net/http"
-	"strings"
 	"os"
-	"html/template"
+	"strings"
 )
 
 var config *Config
+
 //go:generate go-bindata -debug templates static
 func main() {
 	var err error
@@ -62,7 +63,7 @@ func ScriptHandler(w http.ResponseWriter, r *http.Request) {
 	params := r.URL.Query()
 	name := params.Get(":name")
 	if config.Scripts[name] == nil {
-		fmt.Fprint(w, "script " + name + " missing")
+		fmt.Fprint(w, "script "+name+" missing")
 		return
 	}
 	templateParams := make(map[string]interface{})

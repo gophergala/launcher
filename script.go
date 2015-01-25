@@ -3,7 +3,9 @@ package main
 import (
 	"code.google.com/p/go.crypto/ssh"
 	"io"
+	"io/ioutil"
 	"strconv"
+	"os/user"
 )
 
 type Host struct {
@@ -20,11 +22,30 @@ type Script struct {
 }
 
 func (self *Script) Execute(host *Host, out io.Writer) error {
+	usr, err := user.Current()
+	if err != nil {
+		return err
+	}
+	if host.User == "" {
+		host.User = usr.Username
+	}
 	cfg := &ssh.ClientConfig{
 		User: host.User,
-		Auth: []ssh.AuthMethod{
+	}
+	if host.Password != "" {
+		cfg.Auth = []ssh.AuthMethod{
 			ssh.Password(host.Password),
-		},
+		}
+	} else {
+		content, err := ioutil.ReadFile(usr.HomeDir + "/.ssh/id_dsa")
+		if err != nil {
+			return nil
+		}
+		key, err := ssh.ParsePrivateKey(content)
+		if err != nil {
+			return err
+		}
+		cfg.Auth = []ssh.AuthMethod{ssh.PublicKeys(key)}
 	}
 	client, err := ssh.Dial("tcp", host.Name+":"+strconv.Itoa(host.Port), cfg)
 	if err != nil {
