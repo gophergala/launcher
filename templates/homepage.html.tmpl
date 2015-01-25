@@ -2,14 +2,15 @@
   <head>
     <title></title>
      <link href="/static/all.css" rel="stylesheet">
-
   </head>
   <body>
-    <h1>Launcher</h1>
-    
+    <header>
+      <h1><a href="/">Script Launcher</a></h1>
+    </header>
+    <ul>
     {{ range $name, $script := .Scripts }}
-      <a href="/scripts/{{$name}}">{{$script.Name}}</a><br/>
+      <li><a href="/scripts/{{$name}}">{{$script.Name}}</a>
     {{ end }}
-
+    </ul>
   </body>
 </html>

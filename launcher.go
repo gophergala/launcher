@@ -14,7 +14,7 @@ import (
 
 var config *Config
 
-//go:generate go-bindata -debug templates static
+//go:generate go-bindata templates static
 func main() {
 	var err error
 	config, err = ParseConfig("launcher.toml")

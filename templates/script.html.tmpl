@@ -5,13 +5,14 @@
 
   </head>
   <body>
-    <a href="/">Home</a><br/>
-    <h1>{{.script.Name}}</h1>
+    <header>
+      <h1><a href="/">Script Launcher</a></h1>
+      <h2>{{.script.Name}}</h2>
+    </header>
     <button class="button">Execute</button>
     <button class="clear">Clear</button>
-    <div class="output">
+    <div class="console output">
     </div>
-
   </body>
   <script type="text/javascript">
     var scriptName = '{{.name}}';
