@@ -37,9 +37,12 @@ func (self *Script) Execute(host *Host, out io.Writer) error {
 			ssh.Password(host.Password),
 		}
 	} else {
-		content, err := ioutil.ReadFile(usr.HomeDir + "/.ssh/id_dsa")
+		content, err := ioutil.ReadFile(usr.HomeDir + "/.ssh/id_rsa")
 		if err != nil {
-			return nil
+			content, err = ioutil.ReadFile(usr.HomeDir + "/.ssh/id_dsa")
+			if err != nil {
+				return err
+			}
 		}
 		key, err := ssh.ParsePrivateKey(content)
 		if err != nil {
