@@ -1,6 +1,6 @@
 {
-  "id": "home",
-  "paths": ["home.js"],
-  "inputs": "home.js",
+  "id": "all",
+  "paths": ["all.js"],
+  "inputs": "all.js",
   "mode": "ADVANCED"
 }

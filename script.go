@@ -4,8 +4,8 @@ import (
 	"code.google.com/p/go.crypto/ssh"
 	"io"
 	"io/ioutil"
-	"strconv"
 	"os/user"
+	"strconv"
 )
 
 type Host struct {

@@ -1,23 +1,23 @@
-goog.provide('launcher.homepage');
+goog.provide('launcher.scriptpage');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.net.WebSocket');
 
-launcher.homepage = function() {
+launcher.scriptpage = function() {
     var ws = new goog.net.WebSocket();
     this.ws = ws;
     goog.events.listen(ws, goog.net.WebSocket.EventType.MESSAGE,
 			     this.onMessage, undefined, this);
     try {
-	ws.open('ws://localhost:8080/ws');
+	ws.open('ws://'+goog.global['location']['hostname']+':8080/ws');
     } catch (e) {
 	console.log(e);
     }
     this.addButtonListeners();
 };
-goog.addSingletonGetter(launcher.homepage);
+goog.addSingletonGetter(launcher.scriptpage);
 
-launcher.homepage.prototype.addButtonListeners = function() {
+launcher.scriptpage.prototype.addButtonListeners = function() {
     var button = goog.dom.getElementByClass('button');
     goog.events.listen(button, goog.events.EventType.CLICK,
 			     this.buttonHandler, undefined, this);
@@ -26,27 +26,22 @@ launcher.homepage.prototype.addButtonListeners = function() {
 			     this.clearHandler, undefined, this);   
 };
 
-launcher.homepage.prototype.getWs = function() {
+launcher.scriptpage.prototype.getWs = function() {
     return this.ws;
 };
 
-launcher.homepage.prototype.buttonHandler = function() {
+launcher.scriptpage.prototype.buttonHandler = function() {
     this.getWs().send(goog.global['scriptName']);
 };
 
-launcher.homepage.prototype.clearHandler = function() {
+launcher.scriptpage.prototype.clearHandler = function() {
     var output = goog.dom.getElementByClass('output');
     goog.dom.setTextContent(output, '');
 };
 
-launcher.homepage.prototype.onMessage = function(e) {
+launcher.scriptpage.prototype.onMessage = function(e) {
     var output = goog.dom.getElementByClass('output');
     output.innerHTML += e.message;
     output.scrollTop = output.scrollHeight;
 };
-
-// function initHome() {
-//     launcher.homepage.getInstance();
-// }
-// goog.exportSymbol('initHome', initHome);
-launcher.homepage.getInstance();
+launcher.scriptpage.getInstance();
