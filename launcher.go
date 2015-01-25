@@ -44,7 +44,12 @@ func GetAsset(path string) []byte {
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	content := GetAsset("templates/homepage.html.tmpl")
-	fmt.Fprint(w, string(content))
+	tmpl, err := template.New("homepage").Parse(string(content))
+	if err != nil {
+		fmt.Fprint(w, err.Error())
+		return
+	}
+	tmpl.Execute(w, config)
 }
 
 func ScriptHandler(w http.ResponseWriter, r *http.Request) {
