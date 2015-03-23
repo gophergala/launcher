@@ -2,6 +2,7 @@ package main
 
 import (
 	"code.google.com/p/go.crypto/ssh"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os/user"
@@ -16,9 +17,10 @@ type Host struct {
 }
 
 type Script struct {
-	Name    string
-	Host    string
-	Content string
+	Name           string
+	Host           string
+	Content        string
+	HideBoundaries bool
 }
 
 func (self *Script) Execute(host *Host, out io.Writer) error {
@@ -61,8 +63,14 @@ func (self *Script) Execute(host *Host, out io.Writer) error {
 	defer session.Close()
 	session.Stdout = out
 	session.Stderr = out
+	if !self.HideBoundaries {
+		fmt.Fprintln(out, "---------------------- script started ----------------------")
+	}
 	if err := session.Run(self.Content); err != nil {
 		return err
+	}
+	if !self.HideBoundaries {
+		fmt.Fprintln(out, "---------------------- script finished ----------------------")
 	}
 	return nil
 }

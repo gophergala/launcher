@@ -17,3 +17,4 @@
   name="another list files"
   host="localhost"
   content="ls -lh && sleep 1 && ls -lh"
+  hideBoundaries=true

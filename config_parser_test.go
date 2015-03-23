@@ -19,4 +19,7 @@ func TestParseConfig(t *testing.T) {
 		t.Errorf("Expected ls_lh script content to be 'ls -lh && sleep 1 && ls -lh', but got %v",
 			config.Scripts["ls_lh"].Content)
 	}
+	if config.Scripts["ls_lh"].HideBoundaries != true {
+		t.Errorf("Expected ls_lh script hide_boundries to be set to true, but got %v", config.Scripts["ls_lh"].HideBoundaries)
+	}
 }
