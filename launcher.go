@@ -95,7 +95,8 @@ func ExecuteScript(name string, send chan string) {
 		log.Println("Executing " + name + " script")
 		err := script.Execute(host, &ChannelWriter{send})
 		if err != nil {
-			panic(err)
+			// panic(err)
+			fmt.Println(err)
 		}
 	}
 }

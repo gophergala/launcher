@@ -54,10 +54,12 @@ func (self *Script) Execute(host *Host, out io.Writer) error {
 	}
 	client, err := ssh.Dial("tcp", host.Name+":"+strconv.Itoa(host.Port), cfg)
 	if err != nil {
+		fmt.Fprintln(out, err.Error())
 		return err
 	}
 	session, err := client.NewSession()
 	if err != nil {
+		fmt.Fprintln(out, err.Error())
 		return err
 	}
 	defer session.Close()
